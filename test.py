@@ -1,12 +1,14 @@
 
-from prefixTreeESpan import build_tree
+from prefixTreeESpan import build_tree, TreeDB
 
 
 def readin(fn):
-    tree_set = []
+    tdb = TreeDB()
+    idx = 0
     with open(fn, "r") as f:
-        for l in f.readline():
-            tree_set.append(build_tree(l.strip().split(' ')))
+        for line in f:
+            tdb.push(build_tree(line.strip().split(' ')), idx)
+            idx += 1
 
 
 def main():
