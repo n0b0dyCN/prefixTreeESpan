@@ -58,10 +58,29 @@ class PrefixTreeESpan:
         ]
 
     def fre(self, pre_tree, n, proj_db):
+        pattern_cnt = {}
         for proj in proj_db:
             tree = self.tdb[proj.tid]
             for i in range(len(proj.s)):
-                for j in range
+                for j in range(proj.s[i], proj.e[i]):
+                    if tree[j].label != '-1':
+                        patt = (tree[j].label, i+1)
+                        if patt not in pattern_cnt:
+                            pattern_cnt[patt] = set([])
+                        pattern_cnt[patt].append(proj.tid)
+
+        fre_patts = set([g_patt for p in pattern_cnt if len(pattern_cnt[p])>self.min_sup])
+
+        for fre_patt in fre_patts:
+            new_pre_tree = pre_tree
+            new_pre_tree.insert(-fre_patt[1], fre_patt[0])
+            new_pre_tree.insert(-fre_patt[1], '-1')
+            self.add_result(new_pre_tree)
+
+            pdb = []
+            for i in range(len(proj_db)):
+                proj = proj_db[i]
+                tree = self.tdb[proj.tid]
         pass
 
     def run(self):
