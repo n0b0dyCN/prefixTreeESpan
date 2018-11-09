@@ -1,4 +1,5 @@
 from optparse import OptionParser
+from time import time
 
 
 class Node:
@@ -26,6 +27,8 @@ class PrefixTreeESpan:
         self.inf = inf
         self.outf = outf
         self.min_sup = -1
+        self.t_start = None
+        self.t_stop = None
 
         self.cnt_one_level_patterns = {}
     
@@ -67,6 +70,8 @@ class PrefixTreeESpan:
 
     def output_result(self):
         with open(self.outf, "w") as f:
+            timer = "Time: %.04f secends.\n" % (self.t_stop - self.t_start)
+            f.write(timer)
             for each in self.results:
                 print each
                 f.write(" ".join(each) + "\n")
@@ -117,6 +122,7 @@ class PrefixTreeESpan:
         pass
 
     def run(self):
+        self.t_start = time()
         self.readin()
         fre_labels = self.get_frequent_labels()
         for fre_lb in fre_labels:
@@ -132,6 +138,7 @@ class PrefixTreeESpan:
                         project_db.append(proj)
             
             self.fre(prefix_subtree, 1, project_db)
+        self.t_stop = time()
         self.output_result()
         pass
 
